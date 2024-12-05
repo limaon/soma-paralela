@@ -1,0 +1,9 @@
+# Ignore target directory
+/target/
+
+# Ignore Cargo.lock for libraries
+/Cargo.lock
+
+# Ignore IDE specific files
+.vscode/
+.idea/
