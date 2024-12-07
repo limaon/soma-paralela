@@ -1,47 +1,33 @@
-mod combinacao_resultado;
+mod combinacao_resultados;
 mod divisao_lista;
-mod gerenciamento_thread;
+mod gerenciamento_threads;
 mod persistencia;
 mod soma_parcial;
 
-use combinacao_resultado::combinar_resultados;
+// use std::env;
+use std::process;
+
+use combinacao_resultados::combinar_resultados;
 use divisao_lista::dividir_lista;
-use gerenciamento_thread::criar_e_gerenciar_threads;
-// use persistencia::{EstadoParcial, EstadoParcial};
-use soma_parcial::calcular_soma_parcial;
-use std::sync::{Arc, Mutex};
+use gerenciamento_threads::gerenciar_threads;
 
 fn main() {
-    println!("Projeto 'soma-parelela' iniciado");
+    println!("Programa de Soma Paralela de Numeros");
 
-    // Exemplo de lista de numeros
-    let numeros: Vec<i32> = (1..=100).collect();
+    let numeros = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-    // Determinar o numero de threads
-    let num_threads = num_cpus::get();
-    println!("Numero de threads a serem usadas: {}", num_threads);
+    let numero_threads = 2;
 
-    // Dividir a lista
-    let lista_dividida = dividir_lista(&numeros, num_threads);
-    println!("Lista dividida em {} partes.", num_threads);
+    println!("Dividindo a lista em {} threads...", numero_threads);
+    let sublistas = dividir_lista(&numeros, numero_threads);
 
-    // Armazenar as somas parciais de forma compartilhada
-    let somas_parciais = Arc::new(Mutex::new(Vec::new()));
-    let clone_somas_parciais = Arc::clone(&somas_parciais);
+    println!("Criando e executando as threads...");
+    let handles = gerenciar_threads(sublistas);
 
-    // Criar e iniciar as threads
-    let manipuladores = criar_e_gerenciar_threads(num_threads, move |i| {
-        let sublista = &lista_dividida[i];
-        let soma = calcular_soma_parcial(sublista);
-        let mut somas = clone_somas_parciais.lock().unwrap();
-        somas.push(soma);
-    });
+    println!("Combinando os resultados...");
+    let soma_total = combinar_resultados(handles); // 15+40
 
-    for manipulador in manipuladores {
-        manipulador.join().unwrap();
-    }
+    println!("A soma total é: {}", soma_total);
 
-    let somas = somas_parciais.lock().unwrap();
-    let soma_total = combinar_resultados(&somas);
-    println!("Soma total: {}", soma_total);
+    process::exit(0);
 }
