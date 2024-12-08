@@ -2,6 +2,18 @@
 
 Este projeto implementa um programa em Rust para calcular a soma de uma lista grande de números utilizando múltiplas threads. O objetivo principal é dividir a lista em partes, calcular a soma parcial em cada thread e combinar os resultados de forma eficiente e segura.
 
+## Grupo
+- Nomes dos integrantes:
+``` txt
+- ALVARO LIMA
+- CAIO MARQUES
+- DANILO MARCANO
+- ENZO ABENSUR
+- JULLIAN BRITO
+- PEDRO VITORIANO
+```
+
+
 ## Roadmap do Projeto
 
 1. **Divisão da Lista**:
@@ -22,6 +34,22 @@ Este projeto implementa um programa em Rust para calcular a soma de uma lista gr
 6. **Testes e Otimizações**:
    - Testar o desempenho com diferentes tamanhos de listas e configurações de threads.
    - Verificar e otimizar a segurança do controle de concorrência.
+
+---
+
+## Dependências
+
+As seguintes dependências são utilizadas no projeto:
+
+- **serde**: Utilizado para serialização e desserialização de dados.
+  Versão: `1.0`
+  Recursos habilitados: `derive`
+
+- **serde_json**: Biblioteca para manipulação de JSON.
+  Versão: `1.0`
+
+- **num_cpus**: Biblioteca para determinar o número de CPUs disponíveis.
+  Versão: `1.13.0`
 
 ---
 
