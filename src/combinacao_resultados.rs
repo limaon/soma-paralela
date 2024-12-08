@@ -1,16 +1,20 @@
-// Combina as somas parciais calculadas pelas threads para obter a soma total.
-pub fn combinar_resultados(handles: Vec<std::thread::JoinHandle<i32>>) -> i32 {
-    let mut soma_total = 0;
+use std::thread;
 
+// Combina as somas parciais calculadas pelas threads para obter a soma total.
+pub fn combinar_resultados(handles: Vec<thread::JoinHandle<()>>) -> i32 {
+    // Aguardamos todas as threads completarem
     for handle in handles {
-        match handle.join() {
-            Ok(soma_parcial) => soma_total += soma_parcial,
-            Err(_) => {
-                println!("Uma thread falhou ao calcular a soma parcial.");
-                // Aqui você pode implementar lógica adicional para tratar falhas
-            }
+        if let Err(e) = handle.join() {
+            eprintln!("Uma thread falhou: {:?}", e);
         }
     }
 
-    soma_total
+    // Apos todas as threads completarem, recuperamos o estado salvo
+    match crate::persistencia::carregar_estado("estado.json") {
+        Ok(estado) => estado.soma_total,
+        Err(e) => {
+            eprintln!("Erro ao carregar o estado final: {}", e);
+            0
+        }
+    }
 }
